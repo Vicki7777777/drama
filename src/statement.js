@@ -12,23 +12,7 @@ function generateText(invoice, plays) {
   let thisAmount = 0;
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    switch (play.type) {
-      case 'tragedy':
-        thisAmount = 40000;
-        if (perf.audience > 30) {
-          thisAmount += 1000 * (perf.audience - 30);
-        }
-        break;
-      case 'comedy':
-        thisAmount = 30000;
-        if (perf.audience > 20) {
-          thisAmount += 10000 + 500 * (perf.audience - 20);
-        }
-        thisAmount += 300 * perf.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${play.type}`);
-    }
+    thisAmount = calculateAmount(play,perf)
     // add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
     // add extra credit for every ten comedy attendees
@@ -66,6 +50,28 @@ function printText(textResult) {
   result += `Amount owed is ${format(textResult.totalAmount / 100)}\n`;
   result += `You earned ${textResult.volumeCredits} credits \n`;
   return result
+}
+
+function calculateAmount(play,perf) {
+  let amount = 0;
+  switch (play.type) {
+    case 'tragedy':
+      amount = 40000;
+      if (perf.audience > 30) {
+        amount += 1000 * (perf.audience - 30);
+      }
+      break;
+    case 'comedy':
+      amount = 30000;
+      if (perf.audience > 20) {
+        amount += 10000 + 500 * (perf.audience - 20);
+      }
+      amount += 300 * perf.audience;
+      break;
+    default:
+      throw new Error(`unknown type: ${play.type}`);
+  }
+  return amount;
 }
 
 module.exports = {
