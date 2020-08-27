@@ -4,6 +4,12 @@ function statement (invoice, plays) {
   return printText(textResult)
 }
 
+function statementHtml (invoice, plays) {
+  let htmlResult = {customer:invoice.customer,performances: []};
+  htmlResult = generateText(invoice, plays,htmlResult);
+  return printHtml(htmlResult)
+}
+
 function generateText(invoice, plays,textResult) {
 
   let totalAmount = 0;
@@ -48,6 +54,20 @@ function printText(textResult) {
   return result
 }
 
+function printHtml(htmlResult){
+  const format = getFormat();
+  let result = `<h1>Statement for ${htmlResult.customer}</h1>\n`;
+  result += `<table>\n`
+      +`<tr><th>play</th><th>seats</th><th>cost</th></tr>`
+  for(let i=0;i<htmlResult.performances.length;i++){
+    result += ` <tr><td>${htmlResult.performances[i].name}</td><td>${htmlResult.performances[i].audience}</td><td>${format(htmlResult.performances[i].amount / 100)}</td></tr>\n`
+  }
+  result += `</table>\n`+
+      `<p>Amount owed is <em>${format(htmlResult.totalAmount / 100)}</em></p>\n`+
+      `<p>You earned <em>${htmlResult.volumeCredits}</em> credits</p>\n`
+  return result;
+}
+
 function calculateAmount(play,perf) {
   let amount = 0;
   switch (play.type) {
@@ -79,4 +99,5 @@ function calculateVolumeCredits(perf, play) {
 
 module.exports = {
   statement,
+  statementHtml
 };

@@ -1,4 +1,5 @@
 const test = require('ava');
+const {statementHtml} = require("../src/statement");
 const {statement} = require('../src/statement');
 
 const plays = {
@@ -187,14 +188,7 @@ test('statement case 8. Customer BigCo has three performances.Print way is html 
     'printWay': 'html'
   };
 
-  const result = statement(invoice, plays);
-
-  t.is(result, 'Statement for BigCo\n' +
-      ' Hamlet: $650.00 (55 seats)\n' +
-      ' As You Like It: $580.00 (35 seats)\n' +
-      ' Othello: $500.00 (40 seats)\n' +
-      'Amount owed is $1,730.00\n' +
-      'You earned 47 credits \n');
+  const result = statementHtml(invoice, plays);
 
   t.is(result, '<h1>Statement for BigCo</h1>\n' +
       '<table>\n' +
