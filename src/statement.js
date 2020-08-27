@@ -6,7 +6,6 @@ function generateText(invoice, plays) {
 
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`;
   let textResult = {customer:invoice.customer,performances: []};
 
   const format = getFormat();
@@ -35,7 +34,6 @@ function generateText(invoice, plays) {
     // add extra credit for every ten comedy attendees
     if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
     //print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     let data = {
       name:play.name,
       amount:thisAmount,
@@ -44,9 +42,7 @@ function generateText(invoice, plays) {
     textResult.performances.push(data);
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
   textResult.totalAmount = totalAmount
-  result += `You earned ${volumeCredits} credits \n`;
   textResult.volumeCredits = volumeCredits
   let printTextResult = null;
   printTextResult = printText(textResult);
