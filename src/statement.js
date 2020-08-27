@@ -1,12 +1,16 @@
 function statement (invoice, plays) {
+  return printText(invoice, plays);
+}
+
+function printText(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
   const format = getFormat();
+  let thisAmount = 0;
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    let thisAmount = 0;
     switch (play.type) {
       case 'tragedy':
         thisAmount = 40000;
