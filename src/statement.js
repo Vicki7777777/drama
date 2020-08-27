@@ -1,12 +1,13 @@
 function statement (invoice, plays) {
-  return generateText(invoice, plays);
+  let textResult = {customer:invoice.customer,performances: []};
+  textResult = generateText(invoice, plays,textResult);
+  return printText(textResult)
 }
 
-function generateText(invoice, plays) {
+function generateText(invoice, plays,textResult) {
 
   let totalAmount = 0;
   let volumeCredits = 0;
-  let textResult = {customer:invoice.customer,performances: []};
 
   const format = getFormat();
   let thisAmount = 0;
@@ -15,7 +16,6 @@ function generateText(invoice, plays) {
     const play = plays[perf.playID];
     thisAmount = calculateAmount(play,perf)
     volumeCredits += calculateVolumeCredits(perf, play);
-
     let data = {
       name:play.name,
       amount:thisAmount,
@@ -26,7 +26,7 @@ function generateText(invoice, plays) {
   }
   textResult.totalAmount = totalAmount
   textResult.volumeCredits = volumeCredits
-  return printText(textResult);
+  return textResult;
 }
 
 function getFormat() {
