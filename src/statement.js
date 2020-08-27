@@ -26,9 +26,7 @@ function generateText(invoice, plays) {
   }
   textResult.totalAmount = totalAmount
   textResult.volumeCredits = volumeCredits
-  let printTextResult = null;
-  printTextResult = printText(textResult);
-  return printTextResult;
+  return printText(textResult);
 }
 
 function getFormat() {
