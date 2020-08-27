@@ -11,19 +11,11 @@ function generateText(invoice, plays) {
   const format = getFormat();
   let thisAmount = 0;
 
-  function calculateVolumeCredits(perf, play) {
-    // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
-    return volumeCredits;
-  }
-
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     thisAmount = calculateAmount(play,perf)
-    calculateVolumeCredits(perf, play);
-    //print line for this order
+    volumeCredits += calculateVolumeCredits(perf, play);
+
     let data = {
       name:play.name,
       amount:thisAmount,
@@ -78,6 +70,13 @@ function calculateAmount(play,perf) {
       throw new Error(`unknown type: ${play.type}`);
   }
   return amount;
+}
+
+function calculateVolumeCredits(perf, play) {
+  let volumeCredits = 0;
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+  return volumeCredits;
 }
 
 module.exports = {
