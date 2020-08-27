@@ -1,11 +1,13 @@
 function statement (invoice, plays) {
-  return printText(invoice, plays);
+  return generateText(invoice, plays);
 }
 
-function printText(invoice, plays) {
+function generateText(invoice, plays) {
+
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
+  let textResult = {customer:invoice.customer,performances: []};
 
   const format = getFormat();
   let thisAmount = 0;
@@ -34,11 +36,21 @@ function printText(invoice, plays) {
     if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
     //print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+    let data = {
+      name:play.name,
+      amount:thisAmount,
+      audience: perf.audience
+    }
+    textResult.performances.push(data);
     totalAmount += thisAmount;
   }
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  textResult.totalAmount = totalAmount
   result += `You earned ${volumeCredits} credits \n`;
-  return result;
+  textResult.volumeCredits = volumeCredits
+  let printTextResult = null;
+  printTextResult = printText(textResult);
+  return printTextResult;
 }
 
 function getFormat() {
@@ -47,6 +59,17 @@ function getFormat() {
     currency: 'USD',
     minimumFractionDigits: 2,
   }).format;
+}
+
+function printText(textResult) {
+  const format = getFormat();
+  let result = `Statement for ${textResult.customer}\n`;
+  for(let i=0;i<textResult.performances.length;i++){
+    result += ` ${textResult.performances[i].name}: ${format(textResult.performances[i].amount / 100)} (${textResult.performances[i].audience} seats)\n`;
+  }
+  result += `Amount owed is ${format(textResult.totalAmount / 100)}\n`;
+  result += `You earned ${textResult.volumeCredits} credits \n`;
+  return result
 }
 
 module.exports = {
